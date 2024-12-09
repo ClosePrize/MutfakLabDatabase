@@ -189,13 +189,21 @@ def Yemek(driver, ingreditiendsList, desiredRecipeNumber):
             driver.execute_script("window.open('');")  # Yeni sekme aç
             driver.switch_to.window(driver.window_handles[1])  # Yeni sekmeye geçiş yap
             driver.get(recipeLink)
-            recipeIngredients = driver.find_element(by=By.CLASS_NAME, value = "Ingredients_ingredientList__DhBO1").text.split("\n")
-            numberOfIngreditiens = len(recipeIngredients) // 3
             ingreditiends = []
             ingreditiendsDetails = []
+            # recipeIngredients = driver.find_element(by=By.CLASS_NAME, value = "Ingredients_ingredientList__DhBO1").text.split("\n")
+            # numberOfIngreditiens = len(recipeIngredients) // 3
+            # for j in range(0,numberOfIngreditiens):
+            #     ingreditiends.append(recipeIngredients[j*3+2])
+            #     ingreditiendsDetails.append(recipeIngredients[j*3]+ ' ' + recipeIngredients[j*3+1])
+            recipeIngredients = driver.find_element(by=By.CLASS_NAME, value = "Ingredients_ingredientList__DhBO1")
+            numberOfIngreditiens  = len(recipeIngredients.find_elements(By.TAG_NAME, "li"))
+            # //*[@id="__next"]/div/div[3]/main/section[2]/div/div[1]/section/div[3]/div/div[2]/ul/li[1]
             for j in range(0,numberOfIngreditiens):
-                ingreditiends.append(recipeIngredients[j*3+2])
-                ingreditiendsDetails.append(recipeIngredients[j*3]+ ' ' + recipeIngredients[j*3+1])
+                ing = driver.find_element(by=By.XPATH, value=f"//*[@id='__next']/div/div[3]/main/section[2]/div/div[1]/section/div[3]/div/div[2]/ul/li[{j+1}]")
+                ingreditiends.append(ing.find_elements(by=By.CLASS_NAME, value= "li .fw-normal").text)
+                driver.switch_to.parent_frame()
+                # ingreditiendsDetails.append(recipeIngredients[j*3]+ ' ' + recipeIngredients[j*3+1])
             print(recipeName)
             print(recipeLink)
             print(recipeImageLink)
